@@ -15,11 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobymagic.com.javalagos.R;
+import mobymagic.com.javalagos.data.model.User;
 import mobymagic.com.javalagos.ui.userslist.BaseUserListFragment;
+import mobymagic.com.javalagos.ui.userslist.UserView;
 import mobymagic.com.javalagos.utils.DisplayUtility;
+import mobymagic.com.javalagos.utils.LogUtils;
 import mobymagic.com.javalagos.utils.VersionUtils;
 
 public class SearchFragment extends BaseUserListFragment {
@@ -97,7 +102,7 @@ public class SearchFragment extends BaseUserListFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mHandler.removeCallbacks(mSearchRunnable);
-                mHandler.postDelayed(mSearchRunnable, 400);
+                mHandler.postDelayed(mSearchRunnable, 500);
             }
 
             @Override
@@ -150,6 +155,7 @@ public class SearchFragment extends BaseUserListFragment {
     private final Runnable mSearchRunnable = new Runnable() {
         @Override
         public void run() {
+            mPlaceHolderView.removeAllViews();
             setNextPage(1);
             loadData(getNextPage());
         }

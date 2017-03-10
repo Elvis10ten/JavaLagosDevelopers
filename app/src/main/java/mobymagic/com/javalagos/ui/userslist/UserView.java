@@ -27,7 +27,7 @@ import mobymagic.com.javalagos.utils.ColorUtils;
 
 @NonReusable
 @Layout(R.layout.item_user)
-class UserView {
+public class UserView {
 
     @View(R.id.user_avatar_iv)
     private ImageView mUserAvatarView;
@@ -44,7 +44,7 @@ class UserView {
     private Context mContext;
     private boolean mIsLandscape;
 
-    UserView(@NonNull Context context, @NonNull User user) {
+    public UserView(@NonNull Context context, @NonNull User user) {
         mContext = context;
         mUser = user;
         mIsLandscape = mContext.getResources().getBoolean(R.bool.is_landscape);

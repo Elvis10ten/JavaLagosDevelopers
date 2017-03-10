@@ -34,7 +34,7 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
     private static final String LOG_TAG = "BaseUserListFragment";
 
     @BindView(R.id.phv)
-    InfinitePlaceHolderView mPlaceHolderView;
+    protected InfinitePlaceHolderView mPlaceHolderView;
     @BindView(R.id.empty_ll)
     LinearLayout mEmptyContainerView;
     @BindView(R.id.pb)
@@ -46,6 +46,7 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
 
     protected Unbinder mUnBinder;
     protected UserListPresenter mUserListPresenter;
+    private ProgressView mMoreProgress;
 
     private int mNextPage = 1;
 
@@ -78,6 +79,9 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
         if (getResources().getBoolean(R.bool.is_landscape)) {
             setupGrid(mPlaceHolderView.getBuilder());
         }
+
+        mMoreProgress = new ProgressView(this);
+        mPlaceHolderView.setLoadMoreResolver(mMoreProgress);
     }
 
     private void setupGrid(PlaceHolderViewBuilder placeHolderViewBuilder) {
@@ -149,7 +153,7 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
             mErrorContainerView.setVisibility(View.GONE);
             mEmptyContainerView.setVisibility(View.VISIBLE);
         }
-        mPlaceHolderView.noMoreToLoad();
+        //mPlaceHolderView.noMoreToLoad();
     }
 
     @Override
@@ -174,7 +178,6 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
 
         setNextPage((getNextPage() + 1));
         mPlaceHolderView.loadingDone();
-        mPlaceHolderView.setLoadMoreResolver(new ProgressView(this));
     }
 
     @OnClick(R.id.retry_btn)

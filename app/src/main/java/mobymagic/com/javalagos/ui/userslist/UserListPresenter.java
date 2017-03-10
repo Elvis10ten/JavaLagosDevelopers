@@ -23,6 +23,7 @@ public class UserListPresenter extends BasePresenter<UserListContract.UserListVi
 
     @Override
     public void onHardWorkersRequested(int nextPage) {
+        LogUtils.d(LOG_TAG, "Hardworkers requested");
         if(getView() != null) {
             getView().showProgress();
             mDataManager.getHardworkers(mRemoteCallback, null, nextPage);
@@ -31,6 +32,7 @@ public class UserListPresenter extends BasePresenter<UserListContract.UserListVi
 
     @Override
     public void onNewbiesRequested(int nextPage) {
+        LogUtils.d(LOG_TAG, "Newbies requested");
         if(getView() != null) {
             getView().showProgress();
             mDataManager.getNewbies(mRemoteCallback, null, nextPage);
@@ -39,6 +41,7 @@ public class UserListPresenter extends BasePresenter<UserListContract.UserListVi
 
     @Override
     public void onCharmersRequested(int nextPage) {
+        LogUtils.d(LOG_TAG, "Charmers requested");
         if(getView() != null) {
             getView().showProgress();
             mDataManager.getCharmers(mRemoteCallback, null, nextPage);
@@ -47,6 +50,7 @@ public class UserListPresenter extends BasePresenter<UserListContract.UserListVi
 
     @Override
     public void onSearchRequested(String query, int nextPage) {
+        LogUtils.d(LOG_TAG, "Search requested");
         if(getView() != null) {
             getView().showProgress();
             mDataManager.search(mRemoteCallback, null, nextPage, query);
@@ -70,6 +74,12 @@ public class UserListPresenter extends BasePresenter<UserListContract.UserListVi
         @Override
         public void onUnauthorized() {
             //TODO attempt request again with access token
+            LogUtils.e(LOG_TAG, "Unauthorized");
+
+            if(getView() != null) {
+                getView().hideProgress();
+                getView().showError(R.string.check_your_network_connection);
+            }
         }
 
         @Override
