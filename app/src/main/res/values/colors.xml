@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorIcons">#8A000000</color>
+    <color name="colorBottomNavBg">#5A5A5A</color>
+
+    <color name="hint_text_dark">#61000000</color>
+    <color name="sixty_percent_transparency_black">#99000000</color>
+    <color name="thirty_percent_transparency_black">#4D000000</color>
+    <color name="fifty_percent_transparency_white">#80ffffff</color>
+
+</resources>

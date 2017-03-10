@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_newbies"
+        android:icon="@drawable/ic_whatshot_black_24dp"
+        android:title="@string/tab_title_newbies" />
+
+    <item
+        android:id="@+id/navigation_hardworkers"
+        android:icon="@drawable/ic_fitness_center_black_24dp"
+        android:title="@string/tab_title_hardworkers" />
+
+    <item
+        android:id="@+id/navigation_charming"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="@string/tab_title_charmers" />
+
+</menu>

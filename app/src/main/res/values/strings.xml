@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">JavaLagos</string>
+
+    <!--Home Page-->
+    <string name="tab_title_newbies">Newbies</string>
+    <string name="tab_title_hardworkers">Hardworkers</string>
+    <string name="tab_title_charmers">Charmers</string>
+    
+    <!--User list-->
+    <string name="content_desc_user_avatar">User avatar</string>
+    <string name="content_desc_more_options">More options</string>
+    <string name="content_desc_no_result_icon">No result icon</string>
+    <string name="content_desc_error_icon">Error icon</string>
+    <string name="msg_no_result">Sorry, no result was found.</string>
+    <string name="check_your_network_connection">Can\'t load data.\nCheck your network connection.</string>
+    <string name="action_retry">RETRY</string>
+
+    <!--User detail page-->
+    <string name="title_activity_user_detail">Github User Detail</string>
+
+    <!--Search page-->
+    <string name="search_hint">Search for java developers in lagos</string>
+    <string name="transition_search" translatable="false">search</string>
+
+</resources>
