@@ -30,7 +30,7 @@ public class GithubUserServiceFactory {
     }
 
     private static @NonNull GithubUserService makeGithubUserService(@NonNull OkHttpClient okHttpClient) {
-        LogUtils.d(LOG_TAG, "Making github service");
+        LogUtils.d(LOG_TAG, "Making github user service");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -55,7 +55,7 @@ public class GithubUserServiceFactory {
         try {
             File cacheDir = new File(context.getCacheDir(), "http");
             cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-            LogUtils.d(LOG_TAG, "OkHttp disk cache created");
+            LogUtils.d(LOG_TAG, "OkHttp disk cache ready");
         } catch (Exception e) {
             LogUtils.e(LOG_TAG, e);
         }

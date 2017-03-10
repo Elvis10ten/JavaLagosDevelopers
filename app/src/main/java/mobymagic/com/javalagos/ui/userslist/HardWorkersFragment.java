@@ -3,7 +3,7 @@ package mobymagic.com.javalagos.ui.userslist;
 import android.os.Bundle;
 import android.view.View;
 
-public class HardworkersFragment extends BaseUserListFragment {
+public class HardWorkersFragment extends BaseUserListFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -13,7 +13,7 @@ public class HardworkersFragment extends BaseUserListFragment {
 
     @Override
     protected void loadData(int page) {
-        mUserListPresenter.onHardworkersRequested(getNextPage());
+        mUserListPresenter.onHardWorkersRequested(getNextPage());
     }
 
 }

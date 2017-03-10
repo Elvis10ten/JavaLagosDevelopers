@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,13 +8,14 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/AppTheme.AppBarOverlay.Light"
         android:transitionName="@string/transition_search">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/white">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -28,12 +27,13 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/search_pb"
+                    android:layout_toStartOf="@+id/search_pb"
                     android:background="@null"
                     android:alpha="0.0"
+                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:hint="Search Movies, TV Shows, and People"
+                    android:hint="@string/search_hint"
                     android:inputType="textCapWords"
-                    android:singleLine="true"
                     android:textSize="16sp" />
 
                 <ProgressBar
@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="8dp"
                     android:visibility="invisible" />
@@ -51,24 +52,24 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <com.mindorks.placeholderview.InfinitePlaceHolderView
+            android:id="@+id/phv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <include layout="@layout/empty_layout" />
 
-            </LinearLayout>
+        <include layout="@layout/loading_layout" />
 
-        </FrameLayout>
+        <include layout="@layout/error_layout" />
 
-    </android.support.v4.widget.NestedScrollView>
+    </FrameLayout>
 
 </LinearLayout>

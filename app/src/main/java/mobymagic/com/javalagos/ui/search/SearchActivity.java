@@ -21,7 +21,7 @@ public class SearchActivity extends AppCompatActivity {
             fragment = SearchFragment.newInstance(getIntent().getExtras());
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_fl, fragment, "")
+                    .replace(R.id.content_fl, fragment, null)
                     .commit();
         } else {
             getSupportFragmentManager()

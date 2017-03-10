@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mindorks.placeholderview.InfinitePlaceHolderView;
 import com.mindorks.placeholderview.PlaceHolderViewBuilder;
@@ -43,9 +44,10 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
     @BindView(R.id.error_tv)
     TextView mErrorTextView;
 
-    private Unbinder mUnBinder;
+    protected Unbinder mUnBinder;
     protected UserListPresenter mUserListPresenter;
-    private int mNextPage = 0;
+
+    private int mNextPage = 1;
 
     public BaseUserListFragment() {
         // Required empty public constructor
@@ -69,13 +71,13 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
     @CallSuper
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        LogUtils.d(LOG_TAG, "View created");
         mProgressView.setVisibility(View.GONE);
         mPlaceHolderView.getBuilder().setHasFixedSize(true);
 
         if (getResources().getBoolean(R.bool.is_landscape)) {
             setupGrid(mPlaceHolderView.getBuilder());
         }
-        mPlaceHolderView.setLoadMoreResolver(new ProgressView(this));
     }
 
     private void setupGrid(PlaceHolderViewBuilder placeHolderViewBuilder) {
@@ -103,7 +105,7 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
                         float gridViewWidth = getActivity().getResources()
                                 .getDimensionPixelSize(R.dimen.grid_width_regular);
                         int newSpanCount = (int) Math.floor(viewWidth / gridViewWidth);
-                        //Can't be zero, else recyclerview will throw an exception
+                        //Can't be zero, else RecyclerView will throw an exception
                         if (newSpanCount == 0) {
                             newSpanCount = 1;
                         }
@@ -122,9 +124,13 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
     @Override
     public void showProgress() {
         LogUtils.d(LOG_TAG, "Showing progress");
-        mProgressView.setVisibility(View.VISIBLE);
-        mErrorContainerView.setVisibility(View.GONE);
-        mEmptyContainerView.setVisibility(View.GONE);
+        //Only want to show a progress when there is no item in the list because placeholderview
+        // handles it after
+        if(mPlaceHolderView.getViewCount() < 1) {
+            mProgressView.setVisibility(View.VISIBLE);
+            mErrorContainerView.setVisibility(View.GONE);
+            mEmptyContainerView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -138,19 +144,25 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
     @Override
     public void showEmpty() {
         LogUtils.d(LOG_TAG, "Showing empty");
-        mProgressView.setVisibility(View.GONE);
-        mErrorContainerView.setVisibility(View.GONE);
-        mEmptyContainerView.setVisibility(View.VISIBLE);
+        if(mPlaceHolderView.getViewCount() < 1) {
+            mProgressView.setVisibility(View.GONE);
+            mErrorContainerView.setVisibility(View.GONE);
+            mEmptyContainerView.setVisibility(View.VISIBLE);
+        }
         mPlaceHolderView.noMoreToLoad();
     }
 
     @Override
     public void showError(@StringRes int errorMsgRes) {
         LogUtils.d(LOG_TAG, "Showing error");
-        mErrorTextView.setText(errorMsgRes);
-        mProgressView.setVisibility(View.GONE);
-        mErrorContainerView.setVisibility(View.VISIBLE);
-        mEmptyContainerView.setVisibility(View.GONE);
+        if(mPlaceHolderView.getViewCount() < 1) {
+            mErrorTextView.setText(errorMsgRes);
+            mProgressView.setVisibility(View.GONE);
+            mErrorContainerView.setVisibility(View.VISIBLE);
+            mEmptyContainerView.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(getActivity(), R.string.check_your_network_connection, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -162,6 +174,7 @@ public abstract class BaseUserListFragment extends Fragment implements UserListC
 
         setNextPage((getNextPage() + 1));
         mPlaceHolderView.loadingDone();
+        mPlaceHolderView.setLoadMoreResolver(new ProgressView(this));
     }
 
     @OnClick(R.id.retry_btn)

@@ -14,7 +14,10 @@ public interface GithubUsersDataSourceContract {
     }
 
     interface LocalDateSource {
-        List<User> getPopularMovies(int currentPage);
+        List<User> getHardworkers(int currentPage);
+        List<User> getNewbies(int currentPage);
+        List<User> getCharmers(int currentPage);
+
         void saveNewbies(List<User> movies);
         void saveHardworkers(List<User> users);
         void saveCharmers(List<User> users);

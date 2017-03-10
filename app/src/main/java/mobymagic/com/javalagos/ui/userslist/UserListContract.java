@@ -5,13 +5,15 @@ import java.util.List;
 import mobymagic.com.javalagos.data.model.User;
 import mobymagic.com.javalagos.ui.base.RemoteView;
 
-public interface UserListContract {
+interface UserListContract {
 
     interface ViewActions {
 
-        void onHardworkersRequested(int nextPage);
+        void onHardWorkersRequested(int nextPage);
         void onNewbiesRequested(int nextPage);
         void onCharmersRequested(int nextPage);
+        void onSearchRequested(String query, int nextPage);
+
     }
 
     interface UserListView extends RemoteView {

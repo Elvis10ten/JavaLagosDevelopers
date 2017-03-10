@@ -9,6 +9,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public abstract class RemoteCallback<T> implements Callback<T> {
+
     @Override
     public final void onResponse(Call<T> call, Response<T> response) {
         switch (response.code()) {
@@ -24,9 +25,8 @@ public abstract class RemoteCallback<T> implements Callback<T> {
             case HttpURLConnection.HTTP_UNAUTHORIZED:
                 onUnauthorized();
                 break;
-
             default:
-                onFailed(new Throwable("Default " + response.code() + " " + response.message()));
+                onFailed(new Throwable(response.code() + ": " + response.message()));
         }
     }
 

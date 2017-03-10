@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -22,10 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mobymagic.com.javalagos.R;
 import mobymagic.com.javalagos.ui.search.SearchActivity;
-import mobymagic.com.javalagos.ui.userslist.BaseUserListFragment;
 import mobymagic.com.javalagos.ui.userslist.CharmersFragment;
-import mobymagic.com.javalagos.ui.userslist.HardworkersFragment;
+import mobymagic.com.javalagos.ui.userslist.HardWorkersFragment;
 import mobymagic.com.javalagos.ui.userslist.NewbiesFragment;
+import mobymagic.com.javalagos.utils.VersionUtils;
 
 public class HomeActivity extends AppCompatActivity implements HomeContract.HomeView {
 
@@ -52,7 +53,15 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.Home
     }
 
     private void openFirstTab() {
-        replaceContentFragment(new NewbiesFragment());
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_fl);
+        if(fragment == null) {
+            replaceContentFragment(new NewbiesFragment());
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .attach(fragment)
+                    .commit();
+        }
     }
 
     private void replaceContentFragment(Fragment fragment) {
@@ -81,7 +90,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.Home
                     replaceContentFragment(new NewbiesFragment());
                     return true;
                 case R.id.navigation_hardworkers:
-                    replaceContentFragment(new HardworkersFragment());
+                    replaceContentFragment(new HardWorkersFragment());
                     return true;
                 case R.id.navigation_charming:
                     replaceContentFragment(new CharmersFragment());
@@ -91,6 +100,8 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.Home
         }
 
     };
+
+    // region HomeContract.HomeView Methods
 
     @Override
     public void showProgress() {
@@ -117,28 +128,31 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.Home
         return this;
     }
 
-    // region MainContract.View Methods
-
     @Override
     public void viewSearch() {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         Window window = getWindow();
-//        window.setStatusBarColor(primaryDark);
 
         Resources resources = mSearchCardView.getResources();
-        Pair<View, String> searchPair  = getPair(mSearchCardView, resources.getString(R.string.transition_search));
+        Pair<View, String> searchPair  = getPair(resources.getString(R.string.transition_search));
 
         ActivityOptionsCompat options = getActivityOptionsCompat(searchPair);
 
-        window.setExitTransition(null);
-        ActivityCompat.startActivity(this, intent, options.toBundle());
+        //A lot for backward compatibility
+        if(VersionUtils.hasLollipop() && options != null) {
+            window.setExitTransition(null);
+            ActivityCompat.startActivity(this, intent, options.toBundle());
+        } else {
+            startActivity(intent);
+        }
     }
 
     // endregion
 
-    private ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
+    @SuppressWarnings("unchecked")
+    private @Nullable ActivityOptionsCompat getActivityOptionsCompat(Pair pair){
         ActivityOptionsCompat options = null;
 
         Pair<View, String> navigationBarPair  = getNavigationBarPair();
@@ -158,30 +172,34 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.Home
         return options;
     }
 
-    private Pair<View, String> getStatusBarPair(){
+    private @Nullable Pair<View, String> getStatusBarPair(){
         Pair<View, String> pair = null;
-        View statusBar = ButterKnife.findById(this, android.R.id.statusBarBackground);
-        if(statusBar != null)
-            pair = Pair.create(statusBar, statusBar.getTransitionName());
+        if(VersionUtils.hasLollipop()) {
+            View statusBar = ButterKnife.findById(this, android.R.id.statusBarBackground);
+            if (statusBar != null) {
+                pair = Pair.create(statusBar, statusBar.getTransitionName());
+            }
+        }
         return pair;
     }
 
-    private Pair<View, String> getNavigationBarPair(){
+    private @Nullable Pair<View, String> getNavigationBarPair(){
         Pair<View, String> pair = null;
-        View navigationBar = ButterKnife.findById(this, android.R.id.navigationBarBackground);
-        if(navigationBar != null)
-            pair = Pair.create(navigationBar, navigationBar.getTransitionName());
+        if(VersionUtils.hasLollipop()) {
+            View navigationBar = ButterKnife.findById(this, android.R.id.navigationBarBackground);
+            if (navigationBar != null) {
+                pair = Pair.create(navigationBar, navigationBar.getTransitionName());
+            }
+        }
         return pair;
     }
 
-    private Pair<View, String> getPair(View view, String transition){
+    private @Nullable Pair<View, String> getPair(String transition){
         Pair<View, String> searchPair = null;
-        View searchView = ButterKnife.findById(view, R.id.search_cv);
-        if(searchView != null){
-            searchPair = Pair.create(searchView, transition);
+        if(mSearchCardView != null){
+            searchPair = Pair.create((View) mSearchCardView, transition);
         }
 
         return searchPair;
     }
-    // endregion
 }

@@ -1,11 +1,13 @@
 package mobymagic.com.javalagos.ui.search;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,9 +18,11 @@ import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobymagic.com.javalagos.R;
+import mobymagic.com.javalagos.ui.userslist.BaseUserListFragment;
 import mobymagic.com.javalagos.utils.DisplayUtility;
+import mobymagic.com.javalagos.utils.VersionUtils;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends BaseUserListFragment {
 
     // region Views
     @BindView(R.id.appbar)
@@ -28,67 +32,9 @@ public class SearchFragment extends Fragment {
     @BindView(R.id.search_et)
     EditText searchEditText;
 
-    private Transition sharedElementEnterTransition;
     // endregion
 
-    // region Listeners
-    private Transition.TransitionListener enterTransitionTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-            DisplayUtility.showKeyboard(getContext(), searchEditText);
-            searchEditText.animate().alpha(1.0f).setDuration(300);
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-
-        }
-    };
-
-    private Transition.TransitionListener returnTransitionTransitionListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {
-            searchEditText.animate().alpha(0.0f).setDuration(300);
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-            appbar.animate().alpha(0.0f).setDuration(300);
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-        }
-    };
-
-    // endregion
-
-    // region Constructors
-    public SearchFragment() {
-    }
-    // endregion
+    private Handler mHandler;
 
     // region Factory Methods
     public static SearchFragment newInstance() {
@@ -102,22 +48,34 @@ public class SearchFragment extends Fragment {
     }
     // endregion
 
+    // region Constructors
+    public SearchFragment() {
+    }
+    // endregion
+
     // region Lifecycle Methods
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+        mHandler = new Handler();
 
-        sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
-        sharedElementEnterTransition.addListener(enterTransitionTransitionListener);
+        //The pain of backward compat
+        if(VersionUtils.hasLollipop()) {
+            Transition sharedElementEnterTransition = getActivity().getWindow().getSharedElementEnterTransition();
+            sharedElementEnterTransition.addListener(enterTransitionTransitionListener);
+        } else {
+            DisplayUtility.showKeyboard(getContext(), searchEditText);
+            searchEditText.animate().alpha(1.0f).setDuration(300);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        ButterKnife.bind(this, rootView);
+        mUnBinder = ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -131,14 +89,28 @@ public class SearchFragment extends Fragment {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mHandler.removeCallbacks(mSearchRunnable);
+                mHandler.postDelayed(mSearchRunnable, 400);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     // endregion
+
+    @Override
+    protected void loadData(int page) {
+        mUserListPresenter.onSearchRequested(searchEditText.getText().toString(), getNextPage());
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -146,12 +118,40 @@ public class SearchFragment extends Fragment {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 DisplayUtility.hideKeyboard(getContext(), searchEditText);
-//                searchEditText.animate().alpha(0.0f).setDuration(300);
                 getActivity().supportFinishAfterTransition();
-//                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    // region Listeners
+    private Transition.TransitionListener enterTransitionTransitionListener = new Transition.TransitionListener() {
+        @Override
+        public void onTransitionStart(Transition transition) {}
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+            DisplayUtility.showKeyboard(getContext(), searchEditText);
+            searchEditText.animate().alpha(1.0f).setDuration(300);
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {}
+
+        @Override
+        public void onTransitionPause(Transition transition) {}
+
+        @Override
+        public void onTransitionResume(Transition transition) {}
+    };
+
+    // endregion
+
+    private final Runnable mSearchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            setNextPage(1);
+            loadData(getNextPage());
+        }
+    };
 }

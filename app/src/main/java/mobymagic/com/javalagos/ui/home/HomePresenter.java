@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import mobymagic.com.javalagos.ui.base.BasePresenter;
 
-public class HomePresenter extends BasePresenter<HomeContract.HomeView> implements
+class HomePresenter extends BasePresenter<HomeContract.HomeView> implements
         HomeContract.ViewActions {
 
-    public HomePresenter(@NonNull HomeContract.HomeView view) {
+    HomePresenter(@NonNull HomeContract.HomeView view) {
         super(view);
     }
 

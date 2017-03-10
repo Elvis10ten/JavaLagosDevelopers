@@ -5,8 +5,12 @@ import android.support.v7.graphics.Palette;
 
 public class ColorUtils {
 
-    public static @Nullable
-    Palette.Swatch getMostPopulousSwatch(Palette palette) {
+    /**
+     * Get the most populous swatch in the palette.
+     * @param palette A palette
+     * @return The most populous swatch or null
+     */
+    public static @Nullable Palette.Swatch getMostPopulousSwatch(@Nullable Palette palette) {
         Palette.Swatch mostPopulous = null;
         if (palette != null) {
             for (Palette.Swatch swatch : palette.getSwatches()) {

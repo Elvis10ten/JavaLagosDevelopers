@@ -11,7 +11,7 @@ import com.mindorks.placeholderview.annotations.infinite.LoadMore;
 import mobymagic.com.javalagos.R;
 
 @NonReusable
-@Layout(R.layout.loading_layout)
+@Layout(R.layout.loading_more_layout)
 class ProgressView {
 
     @View(R.id.pb)

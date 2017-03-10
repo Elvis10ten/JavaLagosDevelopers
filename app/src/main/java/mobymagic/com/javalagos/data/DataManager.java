@@ -3,10 +3,8 @@ package mobymagic.com.javalagos.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import java.util.List;
-
-import mobymagic.com.javalagos.data.model.User;
 import mobymagic.com.javalagos.data.model.UserResponse;
 import mobymagic.com.javalagos.data.remote.GithubUserService;
 import mobymagic.com.javalagos.data.remote.GithubUserServiceFactory;
@@ -32,8 +30,27 @@ public class DataManager {
         mGithubUserService = GithubUserServiceFactory.makeGithubUserService(context);
     }
 
-    public void getCharactersList(RemoteCallback<UserResponse> listener) {
-        mGithubUserService.getUsers("location:lagos language:java", null, null, null, null)
+    public void getHardworkers(@NonNull RemoteCallback<UserResponse> listener,
+                               @Nullable String accessToken, int page) {
+        mGithubUserService.getUsers("location:lagos language:java", accessToken, "repositories", "desc", page)
                 .enqueue(listener);
+    }
+
+    public void getNewbies(@NonNull RemoteCallback<UserResponse> listener,
+                               @Nullable String accessToken, int page) {
+        mGithubUserService.getUsers("location:lagos language:java", accessToken, "joined", "desc", page)
+                .enqueue(listener);
+    }
+
+    public void getCharmers(@NonNull RemoteCallback<UserResponse> listener,
+                               @Nullable String accessToken, int page) {
+        mGithubUserService.getUsers("location:lagos language:java", accessToken, "followers", "desc", page)
+                .enqueue(listener);
+    }
+
+    public void search(@NonNull RemoteCallback<UserResponse> listener,
+                       @Nullable String accessToken, int page, @NonNull String searchQuery) {
+        mGithubUserService.getUsers(searchQuery + " location:lagos language:java", accessToken,
+                "repositories", "desc", page).enqueue(listener);
     }
 }

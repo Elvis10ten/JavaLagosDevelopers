@@ -14,6 +14,7 @@
     <string name="msg_no_result">Sorry, no result was found.</string>
     <string name="check_your_network_connection">Can\'t load data.\nCheck your network connection.</string>
     <string name="action_retry">RETRY</string>
+    <string name="user_id">Id: %1$d</string>
 
     <!--User detail page-->
     <string name="title_activity_user_detail">Github User Detail</string>
@@ -21,5 +22,11 @@
     <!--Search page-->
     <string name="search_hint">Search for java developers in lagos</string>
     <string name="transition_search" translatable="false">search</string>
+
+    <!--Details page-->
+    <string name="action_share_profile">SHARE PROFILE</string>
+    <string name="title_share_profile_using">Share profile using</string>
+    <string name="title_awesome_developer">Awesome Developer</string>
+    <string name="share_intent_text">Check out this awesome developer @%1$s, %2$s</string>
 
 </resources>

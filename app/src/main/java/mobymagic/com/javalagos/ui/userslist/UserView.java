@@ -53,7 +53,7 @@ class UserView {
     @Resolve
     private void onResolved() {
         mUserNameTextView.setText(mUser.getLogin());
-        mUserMetaTextView.setText(String.valueOf(mUser.getId()));
+        mUserMetaTextView.setText(mContext.getString(R.string.user_id, mUser.getId()));
 
         if(mIsLandscape) {
             mTextContainerView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
